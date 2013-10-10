@@ -16,6 +16,7 @@ body{background:#000;margin:0;padding:0}
 
 var radius = 6371;
 var tilt = 0.41;
+var rotationSpeed = 0.02;
 
 var cloudsScale = 1.005;
 
@@ -28,6 +29,8 @@ var geometry, meshPlanet, meshClouds;
 var dirLight, ambientLight;
 
 var controls;
+
+var clock = new THREE.Clock();
 
 init();
 animate();
@@ -144,6 +147,11 @@ function animate() {
 }
 
 function render() {
+  var delta = clock.getDelta();
+
+  meshPlanet.rotation.y += rotationSpeed * delta;
+  meshClouds.rotation.y += rotationSpeed * delta * 1.25;
+
   renderer.clear();
   renderer.render(scene, camera);
 }
