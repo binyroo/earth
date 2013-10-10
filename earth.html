@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <title>ThreeJS로 지구를 만들자!</title>
+<style type="text/css">
+body{background:#000;margin:0;padding:0}
+</style>
 </head>
 <body>
 
@@ -16,7 +19,7 @@ var tilt = 0.41;
 var SCREEN_WIDTH = window.innerWidth;
 var SCREEN_HEIGHT = window.innerHeight;
 
-var container;
+var container, stats;
 var camera, scene, renderer;
 var geometry, meshPlanet;
 
@@ -54,6 +57,13 @@ function init() {
 
   container.appendChild(renderer.domElement);
 
+  // 상태 모니터링 툴 추가
+  stats = new Stats();
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.top = '0px';
+  stats.domElement.zIndex = 10000;
+  container.appendChild(stats.domElement);
+
   window.addEventListener('resize', onWindowResize, false);
 }
 
@@ -72,6 +82,7 @@ function animate() {
   requestAnimationFrame(animate);
 
   render();
+  stats.update();
 }
 
 function render() {
