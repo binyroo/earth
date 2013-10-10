@@ -17,12 +17,14 @@ body{background:#000;margin:0;padding:0}
 var radius = 6371;
 var tilt = 0.41;
 
+var cloudsScale = 1.005;
+
 var SCREEN_WIDTH = window.innerWidth;
 var SCREEN_HEIGHT = window.innerHeight;
 
 var container, stats;
 var camera, scene, renderer;
-var geometry, meshPlanet;
+var geometry, meshPlanet, meshClouds;
 var dirLight, ambientLight;
 
 var controls;
@@ -53,6 +55,7 @@ function init() {
   var planetTexture = THREE.ImageUtils.loadTexture('texture/earth_atmos_2048.jpg');
   var normalTexture = THREE.ImageUtils.loadTexture('texture/earth_normal_2048.jpg');
   var specularTexture = THREE.ImageUtils.loadTexture('texture/earth_specular_2048.jpg');
+  var cloudsTexture = THREE.ImageUtils.loadTexture('texture/earth_clouds_1024.png');
 
   var shader = THREE.ShaderLib['normalmap'];
   var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
@@ -90,6 +93,18 @@ function init() {
   );
 
   scene.add(meshPlanet);
+
+  meshClouds = new THREE.Mesh(
+    geometry,
+    new THREE.MeshLambertMaterial({
+      color: 0xffffff,
+      map: cloudsTexture,
+      transparent: true
+    })
+  );
+  meshClouds.scale.set(cloudsScale, cloudsScale, cloudsScale);
+
+  scene.add(meshClouds);
 
   renderer = new THREE.WebGLRenderer({
     alpha: false
