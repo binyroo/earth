@@ -11,6 +11,7 @@ body{background:#000;margin:0;padding:0}
 
 <script type="text/javascript" src="js/lib/three.js"></script>
 <script type="text/javascript" src="js/lib/stats.min.js"></script>
+<script type="text/javascript" src="js/EditorControls.js"></script>
 <script type="text/javascript">
 
 var radius = 6371;
@@ -23,6 +24,8 @@ var container, stats;
 var camera, scene, renderer;
 var geometry, meshPlanet;
 var dirLight, ambientLight;
+
+var controls;
 
 init();
 animate();
@@ -37,6 +40,8 @@ function init() {
   camera.position.z = radius * 8;
 
   scene = new THREE.Scene();
+
+  controls = new THREE.EditorControls(camera);
 
   dirLight = new THREE.DirectionalLight(0xffffff/*, 0.5*/);
   dirLight.position.set(-1, 0, 1);
