@@ -12,6 +12,15 @@ body{background:#000;margin:0;padding:0}
 <script type="text/javascript" src="js/lib/three.js"></script>
 <script type="text/javascript" src="js/lib/stats.min.js"></script>
 <script type="text/javascript" src="js/EditorControls.js"></script>
+
+<script type="text/javascript" src="js/shader/CopyShader.js"></script>
+<script type="text/javascript" src="js/shader/FilmShader.js"></script>
+
+<script type="text/javascript" src="js/postprocessing/EffectComposer.js"></script>
+<script type="text/javascript" src="js/postprocessing/ShaderPass.js"></script>
+<script type="text/javascript" src="js/postprocessing/MaskPass.js"></script>
+<script type="text/javascript" src="js/postprocessing/RenderPass.js"></script>
+<script type="text/javascript" src="js/postprocessing/FilmPass.js"></script>
 <script type="text/javascript">
 
 var radius = 6371;
@@ -29,6 +38,7 @@ var geometry, meshPlanet, meshClouds;
 var dirLight, ambientLight;
 
 var controls;
+var composer;
 
 var clock = new THREE.Clock();
 
@@ -179,6 +189,16 @@ function init() {
   container.appendChild(stats.domElement);
 
   window.addEventListener('resize', onWindowResize, false);
+
+  var renderModel = new THREE.RenderPass( scene, camera );
+  var effectFilm = new THREE.FilmPass( 0.35, 0.75, 2048, false );
+
+  effectFilm.renderToScreen = true;
+
+  composer = new THREE.EffectComposer( renderer );
+
+  composer.addPass( renderModel );
+  composer.addPass( effectFilm );
 }
 
 function onWindowResize(e) {
@@ -190,6 +210,8 @@ function onWindowResize(e) {
 
   camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
   camera.updateProjectionMatrix();
+
+  composer.reset();
 }
 
 function animate() {
@@ -206,7 +228,8 @@ function render() {
   meshClouds.rotation.y += rotationSpeed * delta * 1.25;
 
   renderer.clear();
-  renderer.render(scene, camera);
+  // renderer.render(scene, camera);
+  composer.render( delta );
 }
 </script>
 
