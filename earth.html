@@ -22,7 +22,7 @@ var SCREEN_HEIGHT = window.innerHeight;
 var container, stats;
 var camera, scene, renderer;
 var geometry, meshPlanet;
-var dirLight;
+var dirLight, ambientLight;
 
 init();
 animate();
@@ -41,6 +41,9 @@ function init() {
   dirLight = new THREE.DirectionalLight(0xffffff/*, 0.5*/);
   dirLight.position.set(-1, 0, 1);
   scene.add(dirLight);
+
+  ambientLight = new THREE.AmbientLight(0x000000);
+  scene.add(ambientLight);
 
   geometry = new THREE.SphereGeometry(radius, 100, 50);
 
