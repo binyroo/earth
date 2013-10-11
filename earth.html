@@ -33,7 +33,7 @@ var SCREEN_WIDTH = window.innerWidth;
 var SCREEN_HEIGHT = window.innerHeight;
 
 var container, stats;
-var camera, scene, renderer;
+var camera, cameraHelper, cameraObserver, scene, renderer;
 var geometry, meshPlanet, meshClouds;
 var dirLight, ambientLight;
 
@@ -51,10 +51,18 @@ function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(25, SCREEN_WIDTH / SCREEN_HEIGHT, 50, 1e7);
+  camera = new THREE.PerspectiveCamera(25, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 50, 1e6);
   camera.position.z = radius * 8;
 
+  cameraObserver = new THREE.PerspectiveCamera(25, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 50, 1e7);
+  cameraObserver.position.x = 6000;
+  cameraObserver.position.y = 3000;
+  cameraObserver.position.z = radius * 50;
+
   scene = new THREE.Scene();
+
+  cameraHelper = new THREE.CameraHelper(camera);
+  scene.add(cameraHelper);
 
   controls = new THREE.EditorControls(camera);
 
@@ -208,8 +216,11 @@ function onWindowResize(e) {
 
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+  camera.aspect = 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT;
   camera.updateProjectionMatrix();
+
+  cameraObserver.aspect = 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT;
+  cameraObserver.updateProjectionMatrix();
 
   composer.reset();
 }
@@ -228,8 +239,17 @@ function render() {
   meshClouds.rotation.y += rotationSpeed * delta * 1.25;
 
   renderer.clear();
+
+  cameraHelper.visible = false;
+
+  renderer.setViewport(0, 0, SCREEN_WIDTH/2, SCREEN_HEIGHT);
   // renderer.render(scene, camera);
   composer.render( delta );
+
+  cameraHelper.visible = true;
+
+  renderer.setViewport(SCREEN_WIDTH/2, 0, SCREEN_WIDTH/2, SCREEN_HEIGHT);
+  renderer.render(scene, cameraObserver);
 }
 </script>
 
